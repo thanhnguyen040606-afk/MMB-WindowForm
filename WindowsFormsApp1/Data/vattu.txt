@@ -1,0 +1,4 @@
+﻿VT01;Thép cuộn;Cuộn;N01;50
+VT02;Thep mieng;mieng;N01;100
+VT03;Go Xa Cu;Khuc (1 met );N02;50
+VT04;Go Sam;Khuc (1m);N02;100

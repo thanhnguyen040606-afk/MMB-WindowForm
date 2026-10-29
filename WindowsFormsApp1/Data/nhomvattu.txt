@@ -1,0 +1,4 @@
+﻿N01;Sắt thép
+N02;Gỗ
+N03;Nhựa
+N04;Dong

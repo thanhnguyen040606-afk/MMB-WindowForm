@@ -1,0 +1,2 @@
+﻿NCC01;Công ty Kim Khí;123 Lê Lợi;0901234567
+NCC02;Công ty Vật Liệu Xây Dựng;456 Nguyễn Huệ;0909876543
