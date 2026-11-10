@@ -95,6 +95,38 @@ namespace WindowsFormsApp1
             frmNCC.Show();          
         }
 
+        private void lapPhieuNhapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form frm in this.MdiChildren)
+            {
+                if (frm is frmPhieuNhap)
+                {
+                    frm.Activate();
+                    return;
+                }
+            }
+
+            frmPhieuNhap frmPN = new frmPhieuNhap();
+            frmPN.MdiParent = this;
+            frmPN.Show();
+        }
+
+        private void lapPhieuXuatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form frm in this.MdiChildren)
+            {
+                if (frm is frmPhieuXuat)
+                {
+                    frm.Activate();
+                    return;
+                }
+            }
+
+            frmPhieuXuat frmPX = new frmPhieuXuat();
+            frmPX.MdiParent = this;
+            frmPX.Show();
+        }
+
         private void xepNgangToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.LayoutMdi(MdiLayout.TileHorizontal);
