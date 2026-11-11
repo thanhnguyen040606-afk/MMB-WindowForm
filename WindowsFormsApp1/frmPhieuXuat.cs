@@ -145,6 +145,18 @@ namespace WindowsFormsApp1
 
         private void cboVatTu_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CapNhatTonKho();
+        }
+
+        private void frmPhieuXuat_Activated(object sender, EventArgs e)
+        {
+            CapNhatTonKho();
+        }
+
+        private void CapNhatTonKho()
+        {
+            tonKho = PhieuRepository.TinhTonKho();
+
             VatTu vt = cboVatTu.SelectedItem as VatTu;
             if (vt == null)
             {
@@ -180,6 +192,8 @@ namespace WindowsFormsApp1
                 return;
             }
 
+            CapNhatTonKho();
+
             int tonKhaDung = LayTonKhaDung(vt.Ma);
             if (soLuong > tonKhaDung)
             {
@@ -209,10 +223,9 @@ namespace WindowsFormsApp1
 
             HienThiChiTiet();
 
-            cboVatTu.SelectedIndex = -1;
             txtSoLuong.Clear();
             txtDonGia.Clear();
-            lblTonHienTai.Text = "Tồn khả dụng: -";
+            CapNhatTonKho();
             cboVatTu.Focus();
         }
 
@@ -248,6 +261,8 @@ namespace WindowsFormsApp1
                 MessageBox.Show("Phiếu xuất phải có ít nhất một dòng vật tư!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            CapNhatTonKho();
 
             foreach (var ct in chiTiet)
             {

@@ -135,6 +135,18 @@ namespace WindowsFormsApp1
 
         private void cboVatTu_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CapNhatTonKho();
+        }
+
+        private void frmPhieuNhap_Activated(object sender, EventArgs e)
+        {
+            CapNhatTonKho();
+        }
+
+        private void CapNhatTonKho()
+        {
+            tonKho = PhieuRepository.TinhTonKho();
+
             VatTu vt = cboVatTu.SelectedItem as VatTu;
             if (vt == null)
             {
@@ -191,10 +203,9 @@ namespace WindowsFormsApp1
 
             HienThiChiTiet();
 
-            cboVatTu.SelectedIndex = -1;
             txtSoLuong.Clear();
             txtDonGia.Clear();
-            lblTonHienTai.Text = "Tồn hiện tại: -";
+            CapNhatTonKho();
             cboVatTu.Focus();
         }
 
