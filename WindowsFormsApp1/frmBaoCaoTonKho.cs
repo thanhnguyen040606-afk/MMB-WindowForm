@@ -173,10 +173,10 @@ namespace WindowsFormsApp1
                 if (dong.DuoiTonToiThieu)
                 {
                     row.DefaultCellStyle.BackColor =
-                        Color.MistyRose;
+                        Color.FromArgb(255, 199, 206);
 
                     row.DefaultCellStyle.ForeColor =
-                        Color.Red;
+                        Color.DarkRed;
 
                     soVatTuDuoiToiThieu++;
                 }
@@ -197,6 +197,22 @@ namespace WindowsFormsApp1
         private void btnXuatCSV_Click(
             object sender, EventArgs e)
         {
+            if (dtpTuNgay.Value.Date >
+                dtpDenNgay.Value.Date)
+            {
+                MessageBox.Show(
+                    "Từ ngày không được lớn hơn đến ngày!",
+                    "Cảnh báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            // Tính lại theo khoảng ngày đang chọn để số liệu khớp tiêu đề file
+            ketQua = new List<DongNhapXuatTon>();
+            XemBaoCao();
+
             if (ketQua.Count == 0)
             {
                 MessageBox.Show(

@@ -100,6 +100,7 @@ namespace WindowsFormsApp1
 
         private void XoaTrang()
         {
+            lvNhaCungCap.SelectedItems.Clear();
             txtMaNCC.Clear();
             txtTenNCC.Clear();
             txtDiaChi.Clear();
@@ -165,6 +166,7 @@ namespace WindowsFormsApp1
             }
 
             string ma = txtMaNCC.Text.Trim();
+            bool timThay = false;
             foreach (var ncc in danhSachNCC)
             {
                 if (ncc.MaNCC == ma)
@@ -172,8 +174,15 @@ namespace WindowsFormsApp1
                     ncc.TenNCC = txtTenNCC.Text.Trim();
                     ncc.DiaChi = txtDiaChi.Text.Trim();
                     ncc.SoDienThoai = txtSDT.Text.Trim();
+                    timThay = true;
                     break;
                 }
+            }
+
+            if (!timThay)
+            {
+                MessageBox.Show($"Không tìm thấy nhà cung cấp có mã '{ma}' để cập nhật!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             GhiDuLieuNCC();
@@ -194,12 +203,20 @@ namespace WindowsFormsApp1
             if (dr == DialogResult.Yes)
             {
                 string ma = txtMaNCC.Text.Trim();
-                danhSachNCC.RemoveAll(x => x.MaNCC == ma);
+                int soXoa = danhSachNCC.RemoveAll(x => x.MaNCC == ma);
 
                 GhiDuLieuNCC();
                 HienThiListViewNCC();
                 XoaTrang();
-                MessageBox.Show("Đã xóa nhà cung cấp!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                if (soXoa > 0)
+                {
+                    MessageBox.Show("Đã xóa nhà cung cấp!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Không tìm thấy nhà cung cấp có mã '{ma}' để xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

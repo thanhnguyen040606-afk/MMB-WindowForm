@@ -155,11 +155,13 @@ namespace WindowsFormsApp1
         }
         private void XoaTrang()
         {
+            lstvVatTu.SelectedItems.Clear();
             txtMaVT.Clear();
             txtTenVT.Clear();
             txtDonviTinh.Clear();
             txtTonToithieu.Clear();
             cbxMaNhom.SelectedIndex = -1;
+            txtMaVT.ReadOnly = false;
             txtMaVT.Focus();              
         }
         public frmQuanLyVatTu()
@@ -207,7 +209,7 @@ namespace WindowsFormsApp1
             string maVT = txtMaVT.Text.Trim();
             foreach (var vt in danhSachVatTu)
             {
-                if (vt.Ma == maVT)
+                if (string.Equals(vt.Ma, maVT, StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("Mã vật tư này đã tồn tại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtMaVT.Focus();
@@ -242,6 +244,11 @@ namespace WindowsFormsApp1
                 txtDonviTinh.Text = item.SubItems[2].Text;
                 txtTonToithieu.Text = item.SubItems[3].Text;
                 cbxMaNhom.Text = item.SubItems[4].Text;
+                txtMaVT.ReadOnly = true;
+            }
+            else
+            {
+                txtMaVT.ReadOnly = false;
             }
         }
 
@@ -290,6 +297,10 @@ namespace WindowsFormsApp1
                 GhiDuLieuVatTu();               
                 MessageBox.Show("Cập nhật vật tư thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 XoaTrang();
+            }
+            else
+            {
+                MessageBox.Show($"Không tìm thấy vật tư có mã '{maVT}' để cập nhật!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -367,63 +378,120 @@ namespace WindowsFormsApp1
             openFile.Filter = "Tập tin CSV (*.csv)|*.csv|Tập tin Text (*.txt)|*.txt";
             openFile.Title = "Chọn tập tin danh mục vật tư cần nhập";
 
-            if (openFile.ShowDialog() == DialogResult.OK)
+            if (openFile.ShowDialog() != DialogResult.OK)
             {
-                int soLuongThem = 0;
-                try
-                {
-                    using (StreamReader sr = new StreamReader(openFile.FileName))
-                    {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            string[] parts = line.Split(';'); 
-                            if (parts.Length >= 5)
-                            {
-                                bool biTrung = false;
-                                foreach (var vt in danhSachVatTu)
-                                {
-                                    if (vt.Ma == parts[0])
-                                    {
-                                        biTrung = true;
-                                        break;
-                                    }
-                                }
+                return;
+            }
 
-                                if (!biTrung)
-                                {
-                                    int ton;
-                                    int.TryParse(parts[4], out ton);
-                                    danhSachVatTu.Add(new VatTu
-                                    {
-                                        Ma = parts[0],
-                                        Ten = parts[1],
-                                        DonViTinh = parts[2],
-                                        MaNhom = parts[3],
-                                        TonToiThieu = ton
-                                    });
-                                    soLuongThem++;
-                                }
+            int soLuongThem;
+            try
+            {
+                soLuongThem = NhapDanhMucTuFile(openFile.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi đọc file: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (soLuongThem > 0)
+            {
+                HienThiListView(danhSachVatTu);
+                GhiDuLieuVatTu();
+                MessageBox.Show($"Đã nhập thành công {soLuongThem} vật tư mới từ file!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Không có vật tư nào được thêm (file trống, sai định dạng hoặc tất cả mã đã tồn tại).", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private int NhapDanhMucTuFile(string duongDan)
+        {
+            int soLuongThem = 0;
+
+            using (StreamReader sr = new StreamReader(duongDan))
+            {
+                string line;
+                bool daKiemTraDongDau = false;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    // Hỗ trợ cả CSV dấu ';' (định dạng của app) và dấu ',' (Excel)
+                    char dauPhanCach = line.IndexOf(';') >= 0 ? ';' : ',';
+                    string[] parts = line.Split(dauPhanCach);
+                    if (parts.Length < 5)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0; i < parts.Length; i++)
+                    {
+                        parts[i] = parts[i].Trim().Trim('"');
+                    }
+
+                    string maVT = parts[0];
+                    if (string.IsNullOrWhiteSpace(maVT))
+                    {
+                        continue;
+                    }
+
+                    if (!daKiemTraDongDau)
+                    {
+                        daKiemTraDongDau = true;
+                        if (LaDongTieuDe(maVT))
+                        {
+                            // Có cột STT nghĩa là file xuất từ báo cáo, không phải danh mục
+                            if (string.Equals(maVT, "STT", StringComparison.OrdinalIgnoreCase))
+                            {
+                                break;
                             }
+
+                            continue;
                         }
                     }
 
-                    if (soLuongThem > 0)
+                    bool biTrung = false;
+                    foreach (var vt in danhSachVatTu)
                     {
-                        HienThiListView(danhSachVatTu);
-                        GhiDuLieuVatTu();
-                        MessageBox.Show($"Đã nhập thành công {soLuongThem} vật tư mới từ file!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (string.Equals(vt.Ma, maVT, StringComparison.OrdinalIgnoreCase))
+                        {
+                            biTrung = true;
+                            break;
+                        }
                     }
-                    else
+
+                    if (!biTrung)
                     {
-                        MessageBox.Show("Không có vật tư nào được thêm (file trống hoặc tất cả mã đã tồn tại).", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        int ton;
+                        int.TryParse(parts[4], out ton);
+                        danhSachVatTu.Add(new VatTu
+                        {
+                            Ma = maVT,
+                            Ten = parts[1],
+                            DonViTinh = parts[2],
+                            MaNhom = parts[3],
+                            TonToiThieu = ton
+                        });
+                        soLuongThem++;
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi khi đọc file: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            return soLuongThem;
+        }
+
+        private bool LaDongTieuDe(string giaTriDauTien)
+        {
+            return string.Equals(giaTriDauTien, "STT", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(giaTriDauTien, "Mã VT", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(giaTriDauTien, "Ma VT", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(giaTriDauTien, "Mã vật tư", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(giaTriDauTien, "Ma vat tu", StringComparison.OrdinalIgnoreCase);
         }
 
         private void btnTimKiem_Click(object sender, EventArgs e)

@@ -172,7 +172,7 @@ namespace WindowsFormsApp1
 
         public static Dictionary<string, int> TinhTonKho()
         {
-            Dictionary<string, int> tonKho = new Dictionary<string, int>();
+            Dictionary<string, int> tonKho = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var p in DocPhieu(Phieu.LoaiNhap))
             {
