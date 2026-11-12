@@ -157,5 +157,19 @@ namespace WindowsFormsApp1
                 child.Close();
             }
         }
+
+        private void tonKhoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmBaoCaoTonKho frm = new frmBaoCaoTonKho();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void kiemKeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmKiemKe frm = new frmKiemKe();
+            frm.MdiParent = this;
+            frm.Show();
+        }
     }
 }
