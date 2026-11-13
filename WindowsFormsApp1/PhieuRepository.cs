@@ -105,6 +105,8 @@ namespace WindowsFormsApp1
         {
             string duongDan = LayDuongDan(loaiPhieu);
 
+            KhoHelper.DamBaoThuMuc(duongDan);
+
             using (StreamWriter sw = new StreamWriter(duongDan, false, new UTF8Encoding(true)))
             {
                 foreach (var p in danhSach)

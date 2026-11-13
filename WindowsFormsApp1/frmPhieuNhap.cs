@@ -276,6 +276,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi khi lưu phiếu nhập", ex);
                 MessageBox.Show("Lỗi khi lưu phiếu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -370,6 +371,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi khi hủy phiếu nhập", ex);
                 MessageBox.Show("Lỗi khi hủy phiếu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -406,6 +408,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi khi xuất phiếu nhập ra TXT", ex);
                 MessageBox.Show("Lỗi khi xuất file: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

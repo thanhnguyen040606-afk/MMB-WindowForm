@@ -113,6 +113,7 @@ namespace WindowsFormsApp1
             string duongDanVatTu = Path.Combine(AppGlobal.DataFolder, "vattu.txt");
             try
             {
+                KhoHelper.DamBaoThuMuc(duongDanVatTu);
                 using (StreamWriter sw = new StreamWriter(duongDanVatTu, false, System.Text.Encoding.UTF8))
                 {
                     foreach (var vt in danhSachVatTu)
@@ -140,6 +141,7 @@ namespace WindowsFormsApp1
             string duongDan = Path.Combine(AppGlobal.DataFolder, "nhomvattu.txt");
             try
             {
+                KhoHelper.DamBaoThuMuc(duongDan);
                 using (StreamWriter sw = new StreamWriter(duongDan, false, System.Text.Encoding.UTF8))
                 {
                     foreach (var nhom in danhSachNhom)

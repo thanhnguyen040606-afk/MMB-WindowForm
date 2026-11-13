@@ -16,11 +16,25 @@ namespace WindowsFormsApp1
     {
 
         private int soLanSai = 0; 
+        private int soLanSaiToiDa = 3;
+
         public frmLogin()   
 
         {   
             InitializeComponent();
+            soLanSaiToiDa = LaySoLanSaiToiDa();
             LoadRegistry(); 
+        }
+
+        private static int LaySoLanSaiToiDa()
+        {
+            int soLan;
+            if (int.TryParse(AppGlobal.LayCauHinh("SoLanSaiToiDa", "3"), out soLan) && soLan > 0)
+            {
+                return soLan;
+            }
+
+            return 3;
         }
 
 
@@ -89,14 +103,17 @@ namespace WindowsFormsApp1
             else
             {
                 soLanSai++;
-                if (soLanSai >= 3)
+                KhoHelper.GhiLog($"Đăng nhập thất bại lần {soLanSai} cho tài khoản '{username}'");
+
+                if (soLanSai >= soLanSaiToiDa)
                 {
-                    MessageBox.Show("Bạn đã nhập sai 3 lần. Ứng dụng sẽ thoát!", "Khóa", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    KhoHelper.GhiLog($"Khóa đăng nhập tài khoản '{username}' sau {soLanSaiToiDa} lần sai");
+                    MessageBox.Show($"Bạn đã nhập sai {soLanSaiToiDa} lần. Ứng dụng sẽ thoát!", "Khóa", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     Application.Exit();
                 }
                 else
                 {
-                    MessageBox.Show($"Sai tên đăng nhập hoặc mật khẩu! (Còn {3 - soLanSai} lần thử)", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"Sai tên đăng nhập hoặc mật khẩu! (Còn {soLanSaiToiDa - soLanSai} lần thử)", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

@@ -279,6 +279,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi xuất CSV kiểm kê", ex);
                 MessageBox.Show("Lỗi khi xuất file CSV: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

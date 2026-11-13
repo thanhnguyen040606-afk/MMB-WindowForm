@@ -131,6 +131,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi khi xem báo cáo tồn kho", ex);
                 MessageBox.Show(
                     "Lỗi khi xem báo cáo: " + ex.Message,
                     "Lỗi",
@@ -309,6 +310,7 @@ namespace WindowsFormsApp1
                 }
                 catch (Exception ex)
                 {
+                    KhoHelper.GhiLog("Lỗi khi xuất CSV báo cáo tồn kho", ex);
                     MessageBox.Show(
                         "Lỗi khi xuất file CSV: " +
                         ex.Message,

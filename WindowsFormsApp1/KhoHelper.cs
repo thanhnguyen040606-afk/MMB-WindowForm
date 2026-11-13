@@ -7,6 +7,32 @@ namespace WindowsFormsApp1
 {
     internal static class KhoHelper
     {
+        public static void GhiLog(string thongDiep)
+        {
+            try
+            {
+                File.AppendAllText("log.txt", $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}: {thongDiep}\n");
+            }
+            catch
+            {
+                // Ghi log thất bại không được làm dừng chương trình
+            }
+        }
+
+        public static void GhiLog(string thongDiep, Exception ex)
+        {
+            GhiLog($"{thongDiep} - {ex.Message}");
+        }
+
+        public static void DamBaoThuMuc(string duongDanFile)
+        {
+            string thuMuc = Path.GetDirectoryName(duongDanFile);
+            if (!string.IsNullOrEmpty(thuMuc))
+            {
+                Directory.CreateDirectory(thuMuc);
+            }
+        }
+
         public static bool ThuDocSo(string chuoi, out decimal giaTri)
         {
             giaTri = 0;

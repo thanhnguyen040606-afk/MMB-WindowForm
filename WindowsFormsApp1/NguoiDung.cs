@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,19 @@ namespace WindowsFormsApp1
     {
         public static NguoiDung UserDangNhap { get; set; } = null;
 
-        public static string DataFolder = @"..\..\Data";
+        public static string DataFolder = LayCauHinh("DataFolder", @"..\..\Data");
+
+        public static string LayCauHinh(string khoa, string giaTriMacDinh)
+        {
+            try
+            {
+                string giaTri = ConfigurationManager.AppSettings[khoa];
+                return string.IsNullOrWhiteSpace(giaTri) ? giaTriMacDinh : giaTri.Trim();
+            }
+            catch
+            {
+                return giaTriMacDinh;
+            }
+        }
     }
 }

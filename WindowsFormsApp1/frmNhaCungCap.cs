@@ -62,6 +62,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi đọc file nhacungcap.txt", ex);
                 MessageBox.Show("Lỗi đọc file nhà cung cấp: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -71,6 +72,7 @@ namespace WindowsFormsApp1
             string duongDan = Path.Combine(AppGlobal.DataFolder, "nhacungcap.txt");
             try
             {
+                KhoHelper.DamBaoThuMuc(duongDan);
                 using (StreamWriter sw = new StreamWriter(duongDan, false, System.Text.Encoding.UTF8))
                 {
                     foreach (var ncc in danhSachNCC)
@@ -81,6 +83,7 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
+                KhoHelper.GhiLog("Lỗi ghi file nhacungcap.txt", ex);
                 MessageBox.Show("Lỗi ghi file: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
